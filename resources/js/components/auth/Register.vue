@@ -30,55 +30,40 @@
                                         name="email"></v-text-field>
                             </v-flex>
                         </v-layout>
+
+<!--                        <v-fade-transition leave-absolute slot="append">-->
+<!--                            <v-progress-circular-->
+<!--                                    v-if="validating"-->
+<!--                                    size="24"-->
+<!--                                    color="info"-->
+<!--                                    indeterminate-->
+<!--                            ></v-progress-circular>-->
+<!--                            <v-icon v-else-if="errors.first('fqdn')" color="error">close</v-icon>-->
+<!--                            <v-icon v-else color="success">check</v-icon>-->
+<!--                        </v-fade-transition>-->
                         <v-layout row>
                             <v-flex xs12>
                                 <v-text-field
-                                        v-model="input.fqdn"
-                                        v-validate="'required|unique|max:255'"
-                                        data-vv-name="fqdn"
-                                        data-vv-delay="500"
-                                        :error-messages="errors.collect('fqdn')"
-                                        label="FQDN"
-                                        name="fqdn"
-                                        suffix=".app.itplog.com">
-
-                                    <v-fade-transition leave-absolute slot="append">
-                                        <v-progress-circular
-                                                v-if="validating"
-                                                size="24"
-                                                color="info"
-                                                indeterminate
-                                        ></v-progress-circular>
-                                        <v-icon v-else-if="errors.first('fqdn')" color="error">close</v-icon>
-                                        <v-icon v-else color="success">check</v-icon>
-                                    </v-fade-transition>
-
-                                </v-text-field>
+                                    v-model="input.password"
+                                    v-validate="'required|min:6'"
+                                    data-vv-name="password"
+                                    :error-messages="errors.collect('password')"
+                                    ref="password"
+                                    label="Password"
+                                    name="password"
+                                    type="password"></v-text-field>
                             </v-flex>
                         </v-layout>
                         <v-layout row>
                             <v-flex xs12>
                                 <v-text-field
-                                        v-model="input.password"
-                                        v-validate="'required|min:6'"
-                                        data-vv-name="password"
-                                        :error-messages="errors.collect('password')"
-                                        ref="password"
-                                        label="Password"
-                                        name="password"
-                                        type="password"></v-text-field>
-                            </v-flex>
-                        </v-layout>
-                        <v-layout row>
-                            <v-flex xs12>
-                                <v-text-field
-                                        v-model="input.password_confirmation"
-                                        v-validate="'required|confirmed:password'"
-                                        data-vv-as="password"
-                                        :error-messages="errors.collect('password_confirmation')"
-                                        label="Password Confirm"
-                                        name="password_confirmation"
-                                        type="password"></v-text-field>
+                                    v-model="input.password_confirmation"
+                                    v-validate="'required|confirmed:password'"
+                                    data-vv-as="password"
+                                    :error-messages="errors.collect('password_confirmation')"
+                                    label="Password Confirm"
+                                    name="password_confirmation"
+                                    type="password"></v-text-field>
                             </v-flex>
                         </v-layout>
 
@@ -86,6 +71,7 @@
                                 @click="validate"
                                 :loading="loading"
                                 color="primary">Submit</v-btn>
+                        <router-link to="/login" class="float-right mt-2">login</router-link>
                     </v-form>
                 </v-card-text>
             </v-card>

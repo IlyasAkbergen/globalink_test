@@ -3,43 +3,44 @@
 </template>
 
 <script>
+  import { mapState, mapActions, mapMutations } from 'vuex';
   export default {
     name: 'App',
+    methods: {
+      ...mapActions('auth', ['refresh']),
+      ...mapMutations('auth', ['setUser', 'setToken'])
+    },
+    computed: {
+      ...mapState('auth', ['token', 'user'])
+    },
     created () {
-      // this.$axios.interceptors.request.use(
-      //   config => {
-      //     return {
-      //       ...config,
-      //       ...{
-      //         headers: {
-      //           'X-Requested-With': 'XMLHttpRequest',
-      //           'X-CSRF-TOKEN': this.$store.state.auth.token,
-      //         }
-      //       },
-      //     }
-      //   },
-      //   error => {
-      //     if (error.response.status === 401) {
-      //
-      //       vm.$router.push({name: 'auth.login'});
-      //
-      //     } else if (error.response.status === 422) {
-      //
-      //       if (error.response.data.errors){
-      //
-      //         for(let key in error.response.data.errors){
-      //
-      //           vm.$validator.errors.add({field: key, msg: error.response.data.errors[key]})
-      //         }
-      //       }
-      //
-      //     } else {
-      //         console.error(error)
-      //     }
-      //
-      //     Promise.reject(error)
-      //   }
-      // );
+      // if (this.token === null || this.user === null) {
+      //   this.$router.push('/login');
+      // }
+      this.$axios.interceptors.request.use(
+        config => config,
+        error => {
+          if (error.response.status === 401) {
+            this.setToken(null);
+            this.setUser(null);
+            vm.$router.push({name: 'auth.login'});
+
+          } else if (error.response.status === 422) {
+            if (error.response.data.errors){
+
+              for(let key in error.response.data.errors){
+
+                vm.$validator.errors.add({field: key, msg: error.response.data.errors[key]})
+              }
+            }
+
+          } else {
+              console.error(error)
+          }
+
+          Promise.reject(error)
+        }
+      );
       //
       // this.$axios.interceptors.response.use(response => {
       //   if (typeof response.headers.newauthorization !== 'undefined') {

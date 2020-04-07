@@ -1,9 +1,9 @@
 const links = [
   {
-    name: 'Dashboard',
+    name: 'Companies',
     path: '/',
     icon: 'dashboard'
   },
-]
+];
 
 export default links

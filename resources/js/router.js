@@ -7,16 +7,13 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/test',
-      component: () => import('./components/Test'),
-    },
-    {
-
       path: '/auth',
+      name: 'auth',
       component: () => import('./components/layouts/AuthLayout'),
       children: [
         {
           path: '/login',
+          name: 'auth.login',
           component: () => import('./components/auth/Login'),
         },
         {
@@ -32,6 +29,18 @@ export default new Router({
           component: () => import('./components/auth/ResetPassword'),
         }
       ]
+    },
+    {
+      path: '/',
+      name: 'dashboard',
+      component: () => import('./components/layouts/DashboardLayout'),
+      children: [
+        {
+          path: '/companies',
+          name: 'companies',
+          component: () => import('./components/Companies'),
+        }
+      ],
     }
   ]
 })

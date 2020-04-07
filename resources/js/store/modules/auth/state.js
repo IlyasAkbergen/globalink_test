@@ -1,5 +1,7 @@
 export default {
-    user: {},
+    user: null,
     token: null,
+    loading: false,
+    authErrors: [],
 }
 

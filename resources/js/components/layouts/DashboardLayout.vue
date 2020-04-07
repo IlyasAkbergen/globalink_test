@@ -7,40 +7,35 @@
                 app>
 
             <v-list dense>
-                <v-list-tile v-for="link in links" :to="{path: link.path}" :key="link.name">
-                    <v-list-tile-action>
+                <v-list-item v-for="link in links" :to="{path: link.path}" :key="link.name">
+                    <v-list-item-avatar>
                         <v-icon>{{ link.icon }}</v-icon>
-                    </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title>{{ link.name }}</v-list-tile-title>
-                    </v-list-tile-content>
-                </v-list-tile>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                        <v-list-item-title>{{ link.name }}</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </v-list>
 
         </v-navigation-drawer>
 
-        <v-toolbar app fixed clipped-left>
-            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-            <v-toolbar-title>Ticket System</v-toolbar-title>
+        <v-app-bar app fixed clipped-left>
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-toolbar-title>Test task</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-menu bottom left>
-                <v-btn
-                        slot="activator"
-                        icon
-                >
-                    <v-icon large>account_circle</v-icon>
-                </v-btn>
-
+                <template v-slot:activator="{ on }">
+                    <v-btn icon v-on="on">
+                        <v-icon large>account_circle</v-icon>
+                    </v-btn>
+                </template>
                 <v-list>
-                    <v-list-tile @click="logout">
-                        <v-list-tile-title>Logout</v-list-tile-title>
-                        <form id="logout-form" action="/logout" method="POST" style="display: none;">
-                            <input type="hidden" name="_token" :value="token">
-                        </form>
-                    </v-list-tile>
+                    <v-list-item @click="logout">
+                        <v-list-item-title>Logout</v-list-item-title>
+                    </v-list-item>
                 </v-list>
             </v-menu>
-        </v-toolbar>
+        </v-app-bar>
 
         <v-content>
             <v-container>
@@ -52,14 +47,22 @@
 </template>
 
 <script>
+  import { mapMutations } from 'vuex';
+  import links from '../../side-bar-links';
   export default {
     data: () => ({
       drawer: null,
-      links: () => import('../../side-bar-links')
+      links: links,
     }),
+    created() {
+      console.log(this.links);
+    },
     methods: {
-      logout() {
-        document.getElementById('logout-form').submit()
+      ...mapMutations('auth', ['setUser', 'setToken']),
+      logout(){
+        this.setUser(null);
+        this.setToken(null);
+        this.$router.push('/login');
       }
     }
   }
