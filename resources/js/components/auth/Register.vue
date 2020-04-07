@@ -30,17 +30,6 @@
                                         name="email"></v-text-field>
                             </v-flex>
                         </v-layout>
-
-<!--                        <v-fade-transition leave-absolute slot="append">-->
-<!--                            <v-progress-circular-->
-<!--                                    v-if="validating"-->
-<!--                                    size="24"-->
-<!--                                    color="info"-->
-<!--                                    indeterminate-->
-<!--                            ></v-progress-circular>-->
-<!--                            <v-icon v-else-if="errors.first('fqdn')" color="error">close</v-icon>-->
-<!--                            <v-icon v-else color="success">check</v-icon>-->
-<!--                        </v-fade-transition>-->
                         <v-layout row>
                             <v-flex xs12>
                                 <v-text-field
@@ -68,9 +57,20 @@
                         </v-layout>
 
                         <v-btn
-                                @click="validate"
-                                :loading="loading"
-                                color="primary">Submit</v-btn>
+                            @click="validate"
+                            :disabled="loading"
+                            color="primary">
+                            Submit
+                        </v-btn>
+                        <v-fade-transition leave-absolute slot="append">
+                            <v-progress-circular
+                                    v-show="loading"
+                                    class="ml-1 mt-1"
+                                    size="24"
+                                    color="info"
+                                    indeterminate
+                            ></v-progress-circular>
+                        </v-fade-transition>
                         <router-link to="/login" class="float-right mt-2">login</router-link>
                     </v-form>
                 </v-card-text>
@@ -83,7 +83,7 @@
                 width="300">
             <v-card>
                 <v-card-text>
-                    {{message}}
+                    {{ message }}
                     <div v-if="url">
                         <p>Click on the URL to be directed to the personalized app login page</p>
                         <p>
@@ -93,7 +93,8 @@
                     <v-progress-linear
                             v-show="loading"
                             indeterminate
-                            class="mb-0"></v-progress-linear>
+                            class="mb-0">
+                    </v-progress-linear>
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -101,14 +102,13 @@
 </template>
 
 <script>
-  import { Validator } from 'vee-validate'
+  import { mapState, mapActions } from 'vuex'
   export default {
     inject: ['$validator'],
     data: () => ({
       input: {
         name: '',
         email: '',
-        fqdn: '',
         password: '',
         passsword_confirmation: ''
       },
@@ -116,52 +116,34 @@
       url: null,
       message: '',
       show: false,
-      loading: false,
-      //Unique Validation
-      validating: false
     }),
+    computed: {
+      ...mapState('auth', ['loading']),
+    },
     methods: {
+      ...mapActions('auth', ['register']),
       validate() {
         this.$validator.validateAll().then((result) => {
           if (result) {
-
-            this.loading = true
-            this.show = true
-            this.message = 'Registering...'
+            this.show = true;
+            this.message = 'Registering...';
             this.submit()
           }
         })
       },
       submit(){
-        Auth.register(this.input).then(({data}) => {
-          this.loading = false
-          this.message = data.message
-          this.url = data.redirect
-        }).catch(error => {
-          this.loading = false
-          this.show = false
-          this.url = null
-        })
-      }
-    },
-    mounted (){
-      //Unique fqdn check function
-      const isUnique = (value) => {
-        this.validating = true
-        return Auth.checkDomain({fqdn: value}).then(({data}) => {
-          this.validating = false
-          return data
-
-        })
-          .catch(error => {
-            this.validating = false
+        this.register(this.input)
+          .then((res) => {
+            this.show = false;
+            this.url = null;
+            if (res.status === 200) {
+              this.$router.push('/login')
+            }
+          }).catch(error => {
+            this.show = false;
+            this.url = null
           })
       }
-      //Extend Validator instance with new validation function
-      Validator.extend("unique", {
-        validate: isUnique,
-        getMessage: (field, params, data) => data.message
-      });
-    }
+    },
   }
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use http\Cookie;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -32,10 +33,12 @@ class AuthController extends Controller
                 ], 200)
                 ->cookie($cookie['name'], $cookie['value'], $cookie['minutes'], $cookie['path'], $cookie['domain'], $cookie['secure'], $cookie['httponly'], $cookie['samesite']);
         } else {
-            return response()->json(
-                ['error' => 'invalid-credentials'], 422);
+            return response()->json([
+                'error' => 'invalid-credentials'
+            ], 422);
         }
     }
+
     private function getCookieDetails($token)
     {
         return [
@@ -50,6 +53,7 @@ class AuthController extends Controller
             'samesite' => true,
         ];
     }
+
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
@@ -57,5 +61,53 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'successful-logout'
         ])->withCookie($cookie);
+    }
+
+    public function register(Request $request)
+    {
+        /**
+         * Get a validator for an incoming registration request.
+         *
+         * @param  array  $request
+         * @return \Illuminate\Contracts\Validation\Validator
+         */
+        $valid = validator($request->only('email', 'name', 'password'), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($valid->fails()) {
+            $jsonError = response()->json($valid->errors()->all(), 400);
+            return response()->json($jsonError);
+        }
+
+        $data = request()->only('email','name','password');
+
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+        ]);
+
+
+//        $client = Client::where('password_client', 1)->first();
+
+//        $request->request->add([
+//            'grant_type'    => 'password',
+//            'client_id'     => $client->id,
+//            'client_secret' => $client->secret,
+//            'username'      => $data['email'],
+//            'password'      => $data['password'],
+//            'scope'         => null,
+//        ]);
+//
+//        // Fire off the internal request.
+//        $token = Request::create(
+//            'oauth/token',
+//            'POST'
+//        );
+
+        return $this->responseSuccess('ok');
     }
 }

@@ -16,8 +16,16 @@ export default {
       })
   },
 
-  async register ({ commit }, data) {
+  register ({ commit }, data) {
+    commit('setLoading', true);
     return axios.post('register', data)
+      .then((result) => {
+        commit('setLoading', false);
+        return result;
+      })
+      .catch(error => {
+        commit('setLoading', false);
+      })
   },
 
   emailLink({ commit }, data) {
