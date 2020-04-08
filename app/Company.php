@@ -12,4 +12,10 @@ class Company extends Model
     {
         return $this->belongsTo(CompanyCategory::class, 'category_id');
     }
+
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class)
+            ->orderBy('date');
+    }
 }

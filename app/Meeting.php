@@ -9,6 +9,11 @@ class Meeting extends Model
     protected $fillable = ['title', 'date', 'description'];
     protected $with = ['user', 'status', 'type'];
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

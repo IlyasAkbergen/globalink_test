@@ -34,4 +34,14 @@ Route::group(['middleware' =>'auth.api'], function () {
            )
        );
     });
+    Route::get('meeting-statuses', function () {
+        return response()->json(
+            \App\MeetingStatus::all()
+        );
+    });
+    Route::get('meeting-types', function () {
+        return response()->json(
+            \App\MeetingType::all()
+        );
+    });
 });

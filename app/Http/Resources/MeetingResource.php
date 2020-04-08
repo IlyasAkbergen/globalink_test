@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MeetingResource extends JsonResource
@@ -16,7 +17,7 @@ class MeetingResource extends JsonResource
     {
         return [
             'title' => $this->title,
-            'date' => $this->date->isoFormat('DD.MM.YYYY HH:mm'),
+            'date' => Carbon::parse($this->date)->isoFormat('DD.MM.YYYY HH:mm'),
             'description' => $this->description,
             'status' => $this->when($this->relationLoaded('status'), $this->status),
             'type' => $this->when($this->relationLoaded('type'), $this->type),

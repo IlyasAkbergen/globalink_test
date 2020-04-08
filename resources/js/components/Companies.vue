@@ -34,7 +34,7 @@
 
                 <v-card-actions>
                     <v-btn text @click="setShowCompanyForm(company.id)">Редактировать</v-btn>
-                    <v-btn text>Встречи</v-btn>
+                    <v-btn text @click="showMeetings(company.id)">Встречи</v-btn>
                 </v-card-actions>
             </v-card>
         </v-container>
@@ -44,11 +44,12 @@
             :hide="() => this.showCompanyForm = false"
             :submit="this.submitForm"
         />
+        <meetings />
     </v-layout>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex';
+  import { mapState, mapActions, mapMutations } from 'vuex';
   export default {
     name: "Companies",
     data(){
@@ -58,13 +59,15 @@
       }
     },
     components: {
-      CompanyForm: () => import('./CompanyForm')
+      CompanyForm: () => import('./CompanyForm'),
+      Meetings: () => import('./Meetings'),
     },
     computed: {
       ...mapState('companies', ['companies', 'loading'])
     },
     methods: {
       ...mapActions('companies', ['getCompanies', 'addCompany', 'updateCompany']),
+      ...mapMutations('companies', ['setShowCompanyMeetings', 'setFocusedCompany']),
       setShowCompanyForm(id = null){
         if (!!id) {
           this.companyForm = this.companies.find((c) => c.id === id)
@@ -72,6 +75,10 @@
           this.companyForm = {}
         }
         this.showCompanyForm = true;
+      },
+      showMeetings(id){
+        this.setFocusedCompany(id);
+        this.setShowCompanyMeetings(true);
       },
       submitForm() {
         if ( this.companyForm.id ) {

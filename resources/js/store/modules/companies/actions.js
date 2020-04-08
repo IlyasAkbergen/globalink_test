@@ -32,5 +32,26 @@ export default {
       .then((response) => {
         commit('editCompany', response.data.result)
       })
+  },
+
+  addMeeting({ commit }, data) {
+    commit('setLoading', true);
+    return axios.post('meetings', data)
+      .then(() => commit('setLoading', false))
+      .catch(() => commit('setLoading', false));
+  },
+
+  getMeetingStatuses({ commit }) {
+    return axios.get('meeting-statuses')
+      .then((response) => {
+        commit('setMeetingStatuses', response.data);
+      })
+  },
+
+  getMeetingTypes({ commit }) {
+    return axios.get('meeting-types')
+      .then((response) => {
+        commit('setMeetingTypes', response.data);
+      })
   }
 }

@@ -17,6 +17,7 @@ class CreateMeetingsTable extends Migration
             $table->id();
             $table->string('title');
             $table->dateTime('date');
+            $table->unsignedTinyInteger('company_id');
             $table->unsignedTinyInteger('status_id');
             $table->unsignedTinyInteger('type_id');
             $table->unsignedTinyInteger('user_id');

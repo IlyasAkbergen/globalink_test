@@ -22,6 +22,8 @@ class CompanyResource extends JsonResource
             'email' => $this->email,
             'category' => $this->when($this->relationLoaded('category'),
                 new CompanyCategoryResource($this->category)),
+            'meetings' => $this->when($this->relationLoaded('meetings'),
+                MeetingResource::collection($this->meetings)),
         ];
     }
 }

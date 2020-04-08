@@ -10,7 +10,7 @@ class CompanyController extends Controller
 {
     public function index()
     {
-        $companies = Company::with(['category'])->get();
+        $companies = Company::with(['category', 'meetings'])->get();
         return $this->responseSuccess(
             CompanyResource::collection($companies)
         );
@@ -25,7 +25,7 @@ class CompanyController extends Controller
 
         $company->save();
 
-        $company->load(['category']);
+        $company->load(['category', 'meetings']);
 
         return $this->responseSuccess(
             new CompanyResource($company)
@@ -41,7 +41,7 @@ class CompanyController extends Controller
 
         $company->save();
 
-        $company->load(['category']);
+        $company->load(['category', 'meetings']);
 
         return $this->responseSuccess(
             new CompanyResource($company)
