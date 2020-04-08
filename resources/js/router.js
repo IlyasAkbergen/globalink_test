@@ -7,6 +7,10 @@ export default new Router({
   mode: 'history',
   routes: [
     {
+      path: '',
+      redirect: '/companies',
+    },
+    {
       path: '/auth',
       name: 'auth',
       component: () => import('./components/layouts/AuthLayout'),
@@ -31,7 +35,7 @@ export default new Router({
       ]
     },
     {
-      path: '/dashboard',
+      path: '/',
       name: 'dashboard',
       component: () => import('./components/layouts/DashboardLayout'),
       children: [
