@@ -25,6 +25,7 @@
             <v-spacer></v-spacer>
             <v-menu bottom left>
                 <template v-slot:activator="{ on }">
+                    <strong class="px-2">{{ username }}</strong>
                     <v-btn icon v-on="on">
                         <v-icon large>account_circle</v-icon>
                     </v-btn>
@@ -47,21 +48,24 @@
 </template>
 
 <script>
-  import { mapMutations } from 'vuex';
+  import { mapState, mapMutations } from 'vuex';
   import links from '../../side-bar-links';
   export default {
     data: () => ({
       drawer: null,
       links: links,
     }),
-    created() {
-      console.log(this.links);
+    computed: {
+      ...mapState('auth', ['user']),
+      username(){
+        return this.user ? this.user.name : '';
+      }
     },
     methods: {
-      ...mapMutations('auth', ['setUser', 'setToken']),
+      ...mapMutations('auth', ['setUser', 'delToken']),
       logout(){
         this.setUser(null);
-        this.setToken(null);
+        this.delToken();
         this.$router.push('/login');
       }
     }

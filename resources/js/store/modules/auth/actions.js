@@ -28,6 +28,17 @@ export default {
       })
   },
 
+  getUser ({commit}) {
+    commit('setLoading', true);
+    return axios.get('user')
+      .then((response) => {
+        commit('setUser', response.data);
+        commit('setLoading', false);
+        return response
+      })
+      .catch((error) => commit('setLoading', false));
+  },
+
   emailLink({ commit }, data) {
     return axios.post('password/email', data)
   },

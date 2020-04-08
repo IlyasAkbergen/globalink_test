@@ -8,7 +8,13 @@ export default {
     },
 
     setToken (state, token) {
-        state.token = token
+        state.token = token;
+        localStorage.setItem('token', token)
+    },
+
+    delToken (state) {
+        localStorage.removeItem('token');
+        state.token = null
     },
 
     setErrors (state, errors) {

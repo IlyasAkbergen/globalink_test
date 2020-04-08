@@ -1,8 +1,10 @@
 import auth from './auth'
+import companies from './companies'
 
 const requireModule = require.context('.', true, /\.js$/)
 const modules = {
   auth,
+  companies,
 };
 
 requireModule.keys().forEach(fileName => {

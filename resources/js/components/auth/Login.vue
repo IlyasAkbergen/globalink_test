@@ -82,7 +82,7 @@
               password: this.password,
             }).then(() => {
               if (this.token !== null && this.user !== null) {
-                this.$router.push('/');
+                this.$router.push('/companies');
               }
             });
           }

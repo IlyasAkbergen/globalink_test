@@ -1,7 +1,7 @@
 const links = [
   {
     name: 'Companies',
-    path: '/',
+    path: '/companies',
     icon: 'dashboard'
   },
 ];

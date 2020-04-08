@@ -31,7 +31,7 @@ export default new Router({
       ]
     },
     {
-      path: '/',
+      path: '/dashboard',
       name: 'dashboard',
       component: () => import('./components/layouts/DashboardLayout'),
       children: [

@@ -3,20 +3,25 @@
 </template>
 
 <script>
-  import { mapState, mapActions, mapMutations } from 'vuex';
+  import { mapState, mapGetters, mapActions, mapMutations } from 'vuex';
   export default {
     name: 'App',
     methods: {
-      ...mapActions('auth', ['refresh']),
+      ...mapActions('auth', ['refresh', 'getUser']),
       ...mapMutations('auth', ['setUser', 'setToken'])
     },
     computed: {
-      ...mapState('auth', ['token', 'user'])
+      ...mapState('auth', ['user']),
+      ...mapGetters('auth', ['token']),
     },
     created () {
-      // if (this.token === null || this.user === null) {
-      //   this.$router.push('/login');
-      // }
+      if (this.token != null && this.user == null) {
+        this.getUser()
+          .then(() => this.$router.push('/companies'));
+      }
+      else if (this.token == null && this.user == null) {
+        this.$router.push('/login');
+      }
       this.$axios.interceptors.request.use(
         config => config,
         error => {
